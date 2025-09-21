@@ -1,0 +1,72 @@
+
+module Ram_tb;
+    reg clk, reset;
+
+    reg [7:0] A_port;
+    reg w_ena, read_ena;
+    reg [5:0] addrA;
+    wire [7:0] A_out;
+    
+   
+    reg [7:0] B_port;
+    reg w_enb, read_enb;
+    reg [5:0] addrB;
+    wire [7:0] B_out;
+    
+
+    Ram uut (
+        .clk(clk), 
+        .reset(reset),
+        .A_port(A_port),
+        .w_ena(w_ena), 
+        .read_ena(read_ena),
+        .addrA(addrA),
+        .A_out(A_out),
+        .B_port(B_port),
+        .w_enb(w_enb), 
+        .read_enb(read_enb),
+        .addrB(addrB),
+        .B_out(B_out)
+    );
+    
+   
+    always #5 clk = ~clk;
+    
+    initial begin
+        clk = 0;
+        reset = 1;
+        w_ena = 0; read_ena = 0; A_port = 0; addrA = 0;
+        w_enb = 0; read_enb = 0; B_port = 0; addrB = 0;
+
+        
+        #10 reset = 0;
+
+       
+        #10 addrA = 6'd5; A_port = 8'hAA; w_ena = 1;
+        #10 w_ena = 0;
+
+     
+        #10 read_ena = 1;
+        #10 read_ena = 0;
+
+        #10 addrB = 6'd10; B_port = 8'h55; w_enb = 1;
+        #10 w_enb = 0;
+
+        
+        #10 read_enb = 1;
+        #10 read_enb = 0;
+
+        
+        #10 addrA = 6'd15; A_port = 8'hF0; w_ena = 1;
+            addrB = 6'd20; B_port = 8'h0F; w_enb = 1;
+        #10 w_ena = 0; w_enb = 0;
+
+     
+        #10 read_ena = 1; read_enb = 1;
+        #10 read_ena = 0; read_enb = 0;
+
+       
+        #20 $stop;
+    end
+    
+endmodule
